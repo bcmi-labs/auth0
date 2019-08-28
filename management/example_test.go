@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"gopkg.in/auth0.v1"
-	"gopkg.in/auth0.v1/management"
+	"github.com/bcmi-labs/auth0"
+	"github.com/bcmi-labs/auth0/management"
 )
 
 var (
