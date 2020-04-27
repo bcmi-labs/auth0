@@ -171,6 +171,28 @@ type UserRecoveryCode struct {
 	RecoveryCode *string `json:"recovery_code"`
 }
 
+// UserEnrollment contains information about the Guardian enrollments for the user
+type UserEnrollment struct {
+	// Authentication method for this enrollment. Can be `authentication`, `guardian`, or `sms`.
+	AuthMethod *string `json:"auth_method,omitempty"`
+	// Start date and time of this enrollment.
+	EnrolledAt *time.Time `json:"enrolled_at,omitempty"`
+	// ID of this enrollment.
+	ID *string `json:"id,omitempty"`
+	// Device identifier (usually phone identifier) of this enrollment.
+	Identifier *string `json:"identifier,omitempty"`
+	// Last authentication date and time of this enrollment.
+	LastAuth *time.Time `json:"last_auth,omitempty"`
+	// Name of enrollment (usually phone number).
+	Name *string `json:"name,omitempty"`
+	// Phone number for this enrollment.
+	PhoneNumber *string `json:"phone_number,omitempty"`
+	// Status of this enrollment. Can be `pending` or `confirmed`.
+	Status *string `json:"status,omitempty"`
+	// Type of enrollment.
+	Type *string `json:"type,omitempty"`
+}
+
 // UserManager manages Auth0 User resources.
 type UserManager struct {
 	*Management
@@ -354,4 +376,12 @@ func (m *UserManager) GenerateRecoveryCode(id string) (*UserRecoveryCode, error)
 	r := new(UserRecoveryCode)
 	err := m.post(m.uri("users", id, "recovery-code-regeneration"), r)
 	return r, err
+}
+
+// ListEnrollments retrieves all Guardian enrollments for a user.
+//
+// See: https://auth0.com/docs/api/management/v2#!/Users/get_enrollments
+func (m *UserManager) ListEnrollments(id string) (enrols []*UserEnrollment, err error) {
+	err = m.get(m.uri("users", id, "enrollments"), &enrols)
+	return enrols, err
 }
