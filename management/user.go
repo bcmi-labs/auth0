@@ -165,6 +165,12 @@ type UserList struct {
 	Users []*User `json:"users"`
 }
 
+// UserRecoveryCode contains the new recovery code for the user
+type UserRecoveryCode struct {
+	// RecoveryCode is the new account recovery code
+	RecoveryCode *string `json:"recovery_code"`
+}
+
 // UserManager manages Auth0 User resources.
 type UserManager struct {
 	*Management
@@ -339,4 +345,13 @@ func (m *UserManager) Blocks(id string) ([]*UserBlock, error) {
 // See: https://auth0.com/docs/api/management/v2#!/User_Blocks/delete_user_blocks_by_id
 func (m *UserManager) Unblock(id string) error {
 	return m.delete(m.uri("user-blocks", id))
+}
+
+// GenerateRecoveryCode removes the current multi-factor authentication recovery code and generate a new one.
+//
+// See: https://auth0.com/docs/api/management/v2#!/Users/post_recovery_code_regeneration
+func (m *UserManager) GenerateRecoveryCode(id string) (*UserRecoveryCode, error) {
+	r := new(UserRecoveryCode)
+	err := m.post(m.uri("users", id, "recovery-code-regeneration"), r)
+	return r, err
 }
