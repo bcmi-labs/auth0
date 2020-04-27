@@ -84,6 +84,13 @@ func (mfm *MultiFactorManager) List(opts ...ListOption) (mf []*MultiFactor, err 
 	return
 }
 
+// Deletes an enrollment
+//
+// See: https://auth0.com/docs/api/management/v2#!/Guardian/delete_enrollments_by_id
+func (mfm *MultiFactorManager) Delete(id string) error {
+	return mfm.m.delete(mfm.m.uri("guardian", "enrollments", id))
+}
+
 type MultiFactorSMS struct{ m *Management }
 
 // Enable enables or disables the SMS Multi-factor Authentication.
