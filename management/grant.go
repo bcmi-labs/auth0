@@ -1,5 +1,7 @@
 package management
 
+import "net/url"
+
 type Grant struct {
 
 	// The id of the grant.
@@ -37,4 +39,13 @@ func (m *GrantManager) List(opts ...ListOption) (g []*Grant, err error) {
 // https://auth0.com/docs/api/management/v2#!/Grants/delete_grants_by_id
 func (m *GrantManager) Delete(id string, opts ...ListOption) error {
 	return m.delete(m.uri("grants", id) + m.q(opts))
+}
+
+// Delete revokes all grants associated with a user-id
+// https://auth0.com/docs/api/management/v2#!/Grants/delete_grants_by_id
+func (m *GrantManager) DeleteByUserID(userID string, opts ...ListOption) error {
+	opts = append(opts, func(urls url.Values) {
+		urls.Add("user_id", userID)
+	})
+	return m.delete(m.uri("grants") + m.q(opts))
 }
