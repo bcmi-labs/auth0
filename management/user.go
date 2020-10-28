@@ -193,6 +193,18 @@ type UserEnrollment struct {
 	Type *string `json:"type,omitempty"`
 }
 
+// UserAuthenticator contains information about an Authenticator
+type UserAuthenticator struct {
+	// ID of this authenticator.
+	ID *string `json:"id,omitempty"`
+	// Type of authenticator
+	Type *string `json:"type,omitempty"`
+	// Status of the enrollment for this authenticator
+	Confirmed *bool `json:"confirmed,omitempty"`
+	// Start date and time of this enrollment.
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+}
+
 // UserManager manages Auth0 User resources.
 type UserManager struct {
 	*Management
@@ -383,5 +395,13 @@ func (m *UserManager) GenerateRecoveryCode(id string) (*UserRecoveryCode, error)
 // See: https://auth0.com/docs/api/management/v2#!/Users/get_enrollments
 func (m *UserManager) ListEnrollments(id string) (enrols []*UserEnrollment, err error) {
 	err = m.get(m.uri("users", id, "enrollments"), &enrols)
+	return enrols, err
+}
+
+// ListAuthenticators retrieves all authenticators for a user.
+//
+// It's an undocumented API ¯\_(ツ)_/¯
+func (m *UserManager) ListAuthenticators(id string) (enrols []*UserAuthenticator, err error) {
+	err = m.get(m.uri("users", id, "authenticators"), &enrols)
 	return enrols, err
 }
